@@ -53,13 +53,6 @@ public class MyControllerAdvice {
 		return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler(NonUniqueResultException.class)
-	public ResponseEntity<Map<String,String>> handleNonUniqueResultException(NonUniqueResultException ex) {
-		Map<String,String> errorMessage = new HashMap<>();
-		errorMessage.put("error","It is allocated to someone, not able to delete the course details");
-		return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-	}
-
 //	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //	@ExceptionHandler(RuntimeException.class)
 //	public ResponseEntity<Map<String,String>> handleRuntimeException(RuntimeException ex) {
@@ -89,7 +82,7 @@ public class MyControllerAdvice {
 		Map<String,String> errorMap = new HashMap<>();
 		if (cause instanceof MismatchedInputException){
 			MismatchedInputException mismatchedInputException = (MismatchedInputException) cause;
-			errorMap.put( "Invalid Input. " , mismatchedInputException.getPath().get(0).getFieldName());
+			errorMap.put( "Invalid Input. please enter valid input.. " , mismatchedInputException.getPath().get(0).getFieldName());
 		}
 		return new ResponseEntity<Map<String,String>>(errorMap,null,HttpStatus.BAD_REQUEST);
 	}

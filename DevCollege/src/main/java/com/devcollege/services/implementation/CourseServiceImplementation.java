@@ -63,12 +63,9 @@ public class CourseServiceImplementation implements CourseService {
 			return message;
 		}
 
-		//String courseList = courseRepository.getStatusByStudentId(courseId);
-
 		List<Enrollment> enrollment = enrollmentRepository.getAllEnrollmentsCourse(courseId);
 		List<Enrollment> list = new ArrayList<>();
 
-//		if (courseList != null) {
 		for (Enrollment e : enrollment) {
 
 			if (courseRepository.getStatusByStudentId(courseId).equalsIgnoreCase("Allocated") ||

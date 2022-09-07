@@ -18,7 +18,6 @@ public class SequenceIdGenerator extends SequenceStyleGenerator {
 	public static final String VALUE_PREFIX_PARAMETER = "valuePrefix";
 	public static final String VALUE_PREFIX_DEFAULT = "";
 	private String valuePrefix;
-	
 	public static final String NUMBER_FORMAT_PARAMETER = "numberFormat";
 	public static final String NUMBER_FORMAT_DEFAULT = "%d";
 	private String numberFormat;

@@ -14,7 +14,6 @@ public interface StudentService {
 
 	public Student updateStudentById(Student student, String studentId);
 
-//	@Transactional
 	public Map<String,String> deleteStudent(String studentId) throws NotFoundException;
 	
 	public Student getStudentById(String studentId) throws NotFoundException;

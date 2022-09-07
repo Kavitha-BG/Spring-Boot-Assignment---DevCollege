@@ -12,6 +12,8 @@ import com.devcollege.repositories.StudentRepository;
 import com.devcollege.services.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,7 +25,6 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 	private CourseRepository courseRepository;
 	@Autowired
 	private StudentRepository studentRepository;
-
 	@Override
 	public String addEnrollmentForCourse(Enrollment enrollment) throws NotFoundException {
 		Student enrolledStudent = studentRepository.findById(enrollment.getStudentId()).orElseThrow(()
@@ -165,33 +166,40 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 			}
 		}
 
-//		if (enrollmentStatus.getCourseStatus().equalsIgnoreCase("Allocated")) {
+		if (enrollmentStatus.getCourseStatus().equalsIgnoreCase("Allocated")) {
+			enrollmentStatus.setCourseStatus(enrollment.getCourseStatus());
 			if(enrollmentStatus.getCourseStatus().equalsIgnoreCase("Cancelled")) {
 
 				Date courseStartDateTime = enrollmentStatus.getCourseStartDatetime();
-				LocalDateTime cancelledTime = LocalDateTime.now();
-				long difference = courseStartDateTime.getTime() - cancelledTime.getHour();
+				LocalDateTime now = LocalDateTime.now();
+				int diffInDays = (int)( (courseStartDateTime.getTime() - System.currentTimeMillis())
+						/ (1000 * 60 * 60 * 24) );
 
-				if (difference >= 2) {
+				if (diffInDays >= 2) {
 					student.setWalletAmount(student.getWalletAmount() + course.getCourseFee());
 					course.setNoOfSlot(course.getNoOfSlot()+1);
-				} else if (difference >= 1) {
+					Map<String,String> detailedMessage = new HashMap<>();
+					detailedMessage.put("Successfully changed the status and 100% amount is refunded for" , enrolId);
+					return detailedMessage;
+				} else if (diffInDays >= 1) {
 					Float oneDayRefund;
 					oneDayRefund = ((course.getCourseFee() * 70) / 100);
 					student.setWalletAmount(student.getWalletAmount()  + oneDayRefund);
 					course.setNoOfSlot(course.getNoOfSlot()+1);
-				} else if (difference <= 1) {
+					Map<String,String> detailedMessage = new HashMap<>();
+					detailedMessage.put("Successfully changed the status and 70% amount is refunded for" , enrolId);
+					return detailedMessage;
+				} else if (diffInDays <= 1) {
 					Float hoursRefund;
 					hoursRefund = (course.getCourseFee() / 2);
 					student.setWalletAmount(student.getWalletAmount() + hoursRefund);
 					course.setNoOfSlot(course.getNoOfSlot() + 1);
-				}
-			} else {
-				if(enrollment.getCourseStatus().equalsIgnoreCase("InProgress")) {
-					enrollmentStatus.setCourseStatus(enrollment.getCourseStatus());
+					Map<String,String> detailedMessage = new HashMap<>();
+					detailedMessage.put("Successfully changed the status and 50% amount is refunded for" , enrolId);
+					return detailedMessage;
 				}
 			}
-//		}
+		}
 		enrollmentStatus.setCourseStatus(enrollment.getCourseStatus());
 		enrollmentRepository.save(enrollmentStatus);
 		studentRepository.save(student);
