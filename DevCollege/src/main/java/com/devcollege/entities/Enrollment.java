@@ -46,13 +46,13 @@ public class Enrollment {
 
 	private String studentId;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
 	@Column(name="course_start_datetime",nullable=false)
 	@FutureOrPresent(message = "Course Start Date Time should be present or future date")
 	@NotNull(message = "Course Start Datetime  should not be null")
 	private Date courseStartDatetime;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
 	@Column(name="course_end_datetime",nullable=false)
 	@Future(message = "Course End Date Time should be future date")
 	private Date courseEndDatetime;

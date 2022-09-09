@@ -28,7 +28,7 @@ public class MyControllerAdvice {
 	public ResponseEntity<Map<String,String>> handleEmptyInput(NotFoundException ex) {
 		Map<String,String> errorMessage = new HashMap<>();
 		errorMessage.put("message",ex.getPassedValue()+" doesn't exist " );
-		return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(NoDataFoundException.class)
@@ -37,6 +37,7 @@ public class MyControllerAdvice {
 		errorMessage.put("error","No data Found");
 		return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 	}
+
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<Map<String,String>> handleConstraintViolationException(ConstraintViolationException ex) {
@@ -69,6 +70,14 @@ public class MyControllerAdvice {
 		return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+
+	@ExceptionHandler(DataNotFoundException.class)
+	public ResponseEntity<Map<String,String>> handleDataNotFoundException(DataNotFoundException ex) {
+		Map<String,String> errorMessage = new HashMap<>();
+		errorMessage.put("message",ex.getPassedValue()+" does not enrol for any course.");
+		return new ResponseEntity<>(errorMessage, HttpStatus.OK);
+	}
+
 	@ExceptionHandler(ApiResponseException.class)
 	public ResponseEntity<ApiResponseException> handleApiResponseException (ApiResponseException ex) {
 		String message = ex.getMessage();
@@ -96,5 +105,13 @@ public class MyControllerAdvice {
 			errorMap.put(fieldName, message);
 		});
 		return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<Map<String,String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+		Map<String,String> errorMessage = new HashMap<>();
+		errorMessage.put("detailedMessage","The given id must not be null!");
+		return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

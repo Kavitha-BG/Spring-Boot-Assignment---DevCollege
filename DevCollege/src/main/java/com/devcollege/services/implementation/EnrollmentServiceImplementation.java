@@ -3,6 +3,7 @@ package com.devcollege.services.implementation;
 import com.devcollege.entities.Course;
 import com.devcollege.entities.Enrollment;
 import com.devcollege.entities.Student;
+import com.devcollege.exceptions.DataNotFoundException;
 import com.devcollege.exceptions.NoDataFoundException;
 import com.devcollege.exceptions.NotFoundException;
 import com.devcollege.payloads.EnrollmentDto;
@@ -25,6 +26,7 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 	private CourseRepository courseRepository;
 	@Autowired
 	private StudentRepository studentRepository;
+
 	@Override
 	public String addEnrollmentForCourse(Enrollment enrollment) throws NotFoundException {
 		Student enrolledStudent = studentRepository.findById(enrollment.getStudentId()).orElseThrow(()
@@ -44,9 +46,10 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 
 			Calendar calender = Calendar.getInstance();
 			calender.setTime(enrollment.getCourseStartDatetime());
-			calender.add(Calendar.MINUTE, enrolledCourse.getCourseDuration());
-			Date date = calender.getTime();
-			enrollment.setCourseEndDatetime(date);
+			calender.add(Calendar.HOUR_OF_DAY, enrolledCourse.getCourseDuration());
+//			Date date = calender.getTime();
+//			enrollment.setCourseEndDatetime(date);
+			enrollment.setCourseEndDatetime(calender.getTime());
 
 			Enrollment getId = enrollmentRepository.save(enrollment);
 			courseRepository.save(enrolledCourse);
@@ -123,22 +126,27 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 
 		List<EnrollmentDto> enrolledList = new ArrayList<>();
 
-		for(Enrollment enrollment : enrollments){
-			EnrollmentDto enrollmentDto = new EnrollmentDto();
-			enrollmentDto.setEnrolId(enrollment.getEnrolId());
-			enrollmentDto.setCourseId(enrollment.getCourseId());
-			Course course = courseRepository.findById(enrollment.getCourseId()).get();
-			enrollmentDto.setCourseName(course.getCourseName());
-			enrollmentDto.setCourseStatus(enrollment.getCourseStatus());
-			enrollmentDto.setStudentId(enrollment.getStudentId());
-			enrollmentDto.setStudentName(checkStudent.getStudentName());
-			enrollmentDto.setCourseStartDatetime(enrollment.getCourseStartDatetime());
-			enrollmentDto.setCourseEndDatetime(enrollment.getCourseEndDatetime());
-			enrollmentDto.setCourseLink("http://localhost:8080/course/get/" + course.getCourseId());
-			enrollmentDto.setStudentLink("http://localhost:8080/student/get/" + checkStudent.getStudentId());
-			enrolledList.add(enrollmentDto);
-		}
-		return enrolledList;
+		if(enrollments.contains(studentId)) {
+
+			for (Enrollment enrollment : enrollments) {
+				EnrollmentDto enrollmentDto = new EnrollmentDto();
+				enrollmentDto.setEnrolId(enrollment.getEnrolId());
+				enrollmentDto.setCourseId(enrollment.getCourseId());
+				Course course = courseRepository.findById(enrollment.getCourseId()).get();
+				enrollmentDto.setCourseName(course.getCourseName());
+				enrollmentDto.setCourseStatus(enrollment.getCourseStatus());
+				enrollmentDto.setStudentId(enrollment.getStudentId());
+				enrollmentDto.setStudentName(checkStudent.getStudentName());
+				enrollmentDto.setCourseStartDatetime(enrollment.getCourseStartDatetime());
+				enrollmentDto.setCourseEndDatetime(enrollment.getCourseEndDatetime());
+				enrollmentDto.setCourseLink("http://localhost:8080/course/get/" + course.getCourseId());
+				enrollmentDto.setStudentLink("http://localhost:8080/student/get/" + checkStudent.getStudentId());
+				enrolledList.add(enrollmentDto);
+			}
+			return enrolledList;
+		} else
+			throw new DataNotFoundException("studentId","",checkStudent.getStudentName());
+
 	}
 
 	@Override
@@ -171,32 +179,24 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 			if(enrollmentStatus.getCourseStatus().equalsIgnoreCase("Cancelled")) {
 
 				Date courseStartDateTime = enrollmentStatus.getCourseStartDatetime();
-				LocalDateTime now = LocalDateTime.now();
 				int diffInDays = (int)( (courseStartDateTime.getTime() - System.currentTimeMillis())
 						/ (1000 * 60 * 60 * 24) );
+				System.out.println(diffInDays);
+				System.out.println(System.currentTimeMillis());
 
 				if (diffInDays >= 2) {
 					student.setWalletAmount(student.getWalletAmount() + course.getCourseFee());
 					course.setNoOfSlot(course.getNoOfSlot()+1);
-					Map<String,String> detailedMessage = new HashMap<>();
-					detailedMessage.put("Successfully changed the status and 100% amount is refunded for" , enrolId);
-					return detailedMessage;
 				} else if (diffInDays >= 1) {
 					Float oneDayRefund;
 					oneDayRefund = ((course.getCourseFee() * 70) / 100);
 					student.setWalletAmount(student.getWalletAmount()  + oneDayRefund);
 					course.setNoOfSlot(course.getNoOfSlot()+1);
-					Map<String,String> detailedMessage = new HashMap<>();
-					detailedMessage.put("Successfully changed the status and 70% amount is refunded for" , enrolId);
-					return detailedMessage;
 				} else if (diffInDays <= 1) {
 					Float hoursRefund;
 					hoursRefund = (course.getCourseFee() / 2);
 					student.setWalletAmount(student.getWalletAmount() + hoursRefund);
 					course.setNoOfSlot(course.getNoOfSlot() + 1);
-					Map<String,String> detailedMessage = new HashMap<>();
-					detailedMessage.put("Successfully changed the status and 50% amount is refunded for" , enrolId);
-					return detailedMessage;
 				}
 			}
 		}

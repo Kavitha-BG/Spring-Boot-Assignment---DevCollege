@@ -45,7 +45,7 @@ public class Student {
 	@Column(name="wallet_amount",nullable=false,length=10)
 	@NotNull
 //	@Positive(message= "Wallet Amount must be numeric or decimal positive value")
-	@Min(value=1, message = "WalletAmount should be Rs.1")
+	@Min(value=1, message = "WalletAmount should be more than Rs.1")
 	@Max(value = 50000, message = "Wallet Amount should be lesser than Rs.50000")
 	private Float walletAmount;
 	

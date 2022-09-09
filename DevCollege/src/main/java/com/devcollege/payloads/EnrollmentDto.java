@@ -10,9 +10,9 @@ public class EnrollmentDto {
     private String courseName;
     private String studentId;
     private String studentName;
-    @JsonFormat(pattern = "YYYY/MM/DD HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
     private Date courseStartDatetime;
-    @JsonFormat(pattern = "YYYY/MM/DD HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss")
     private Date courseEndDatetime;
     private String courseStatus;
     private String courseLink ;
