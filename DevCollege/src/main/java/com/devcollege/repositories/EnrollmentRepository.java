@@ -12,10 +12,6 @@ import java.util.List;
 public interface EnrollmentRepository extends JpaRepository<Enrollment, String> {
     @Query(nativeQuery = true,value = "SELECT * FROM enrollments where student_id=:studentId")
     public List<Enrollment> getAllEnrollments(@Param("studentId") String studentId);
-
-//    @Query(nativeQuery= true,value="DELETE FROM enrollments WHERE student_id =:enrolId")
-//    public List<Enrollment> deleteStudentById(@Param("enrolId") String enrolId);
-
     @Query(nativeQuery = true,value = "SELECT * FROM enrollments where course_id=:courseId")
     public List<Enrollment> getAllEnrollmentsCourse(@Param("courseId") String courseId);
 }

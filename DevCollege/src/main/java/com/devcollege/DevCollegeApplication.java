@@ -14,7 +14,6 @@ public class DevCollegeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DevCollegeApplication.class, args);
-	
 	}
 
 }

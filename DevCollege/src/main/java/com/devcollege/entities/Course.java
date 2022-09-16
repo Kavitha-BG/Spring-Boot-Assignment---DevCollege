@@ -160,6 +160,16 @@ public class Course {
 
 
 
+
+
+
+
+
+
+
+
+
+
 //	@OneToMany(mappedBy = "courses", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //	private List<Enrollment> enrollmentList;
 

@@ -47,8 +47,6 @@ public class EnrollmentServiceImplementation implements EnrollmentService {
 			Calendar calender = Calendar.getInstance();
 			calender.setTime(enrollment.getCourseStartDatetime());
 			calender.add(Calendar.HOUR_OF_DAY, enrolledCourse.getCourseDuration());
-//			Date date = calender.getTime();
-//			enrollment.setCourseEndDatetime(date);
 			enrollment.setCourseEndDatetime(calender.getTime());
 
 			Enrollment getId = enrollmentRepository.save(enrollment);

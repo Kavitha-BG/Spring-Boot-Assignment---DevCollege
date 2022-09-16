@@ -54,14 +54,6 @@ public class MyControllerAdvice {
 		return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//	@ExceptionHandler(RuntimeException.class)
-//	public ResponseEntity<Map<String,String>> handleRuntimeException(RuntimeException ex) {
-//		Map<String,String> errorMessage = new HashMap<>();
-//		errorMessage.put("detailedMessage", ex.getMessage());
-//		return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
-
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(MissingPathVariableException.class)
 	public ResponseEntity<Map<String,String>> handleMissingPathVariableException(MissingPathVariableException ex) {

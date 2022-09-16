@@ -14,7 +14,7 @@ public interface CourseService {
 	public Course addCourse(Course course);
 
 	public String updateCourseById(Course course, String courseId) throws NotFoundException;
-//	@Transactional
+
 	public Map<String,String> deleteCourse(String courseId) throws NotFoundException;
 	
 	public Course getCourseById(String courseId) throws NotFoundException;

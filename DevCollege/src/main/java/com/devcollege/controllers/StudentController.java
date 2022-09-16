@@ -43,15 +43,8 @@ public class StudentController {
 	@DeleteMapping("/deletestudent/{studentId}")
 	public ResponseEntity<Map<String,String>> deleteStudent(@Valid @PathVariable String studentId) throws NotFoundException {
 		Map<String,String> deleteStudent = studentService.deleteStudent(studentId);
-//		return ResponseEntity.ok("Successfully Deleted Student details for "+ studentId);
 		return new ResponseEntity<Map<String,String>>(deleteStudent,HttpStatus.OK);
 	}
-
-//	@GetMapping("/get")
-//	public ResponseEntity<Student> getStudentById(@Valid @RequestParam(value="studentId", required=false) String studentId) throws StudentNotFoundException {
-//		Student retrieveStudent = studentService.getStudentById(studentId);
-//		return new ResponseEntity<Student>(retrieveStudent, HttpStatus.OK);
-//	}
 
 	@GetMapping("/get/{studentId}")
 	public ResponseEntity<Student> getStudentById(@Valid @PathVariable String studentId) throws NotFoundException {

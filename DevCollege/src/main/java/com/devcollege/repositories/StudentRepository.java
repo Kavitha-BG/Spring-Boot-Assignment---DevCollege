@@ -11,7 +11,6 @@ import com.devcollege.entities.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, String> {
-
     @Query(nativeQuery= true,value="SELECT course_status FROM enrollments where student_id=:studentId")
     public String getCourseStatusByStudentId(@Param("studentId") String studentId);
 }
